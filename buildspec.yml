@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing Terraform
+
+  build:
+    commands:
+      - terraform init
+      - terraform validate
+      - terraform plan
+artifacts:
+  files:
+    - '**/*'
