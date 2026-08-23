@@ -34,3 +34,6 @@ output "sns_topic_arn" {
 output "api_url" {
   value = aws_apigatewayv2_stage.prod.invoke_url
 }
+output "pipeline_test" {
+  value = "CI-CD Working"
+}
