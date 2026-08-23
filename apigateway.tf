@@ -45,9 +45,9 @@ resource "aws_lambda_permission" "apigw" {
 ###POSTRoute###
 resource "aws_apigatewayv2_route" "employee_route" {
 
-  api_id = aws_apigatewayv2_api.demo_api.id
+  api_id    = aws_apigatewayv2_api.demo_api.id
   route_key = "POST /employee"
-  target = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 
 }
 ###NEWROUTE###
