@@ -1,53 +1,160 @@
 import json
 import boto3
 
-dynamodb = boto3.resource("dynamodb")
+dynamodb = boto3.client("dynamodb")
 
-table = dynamodb.Table("EmployeeTerraformDemo")
+TABLE_NAME = "EmployeeTerraformDemo"
+
+
+def response(status_code, body):
+    return {
+        "statusCode": status_code,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": json.dumps(body)
+    }
 
 
 def lambda_handler(event, context):
-   method = event["requestContext"]["http"]["method"]
 
-   if method == "POST":
-       body = json.loads(event["body"])
+    method = event["requestContext"]["http"]["method"]
 
-       item = {
-             "EmployeeID": body["EmployeeID"],
-             "Name": body["Name"]
+    # -----------------------------
+    # CREATE EMPLOYEE (POST)
+    # -----------------------------
+    if method == "POST":
 
-       }
+        body = json.loads(event["body"])
 
-       table.put_item(Item=item)
+        employee_id = body["EmployeeID"]
+        name = body["Name"]
 
-       return {
-       "statusCode": 200,
-       "body": json.dumps(item)
+        dynamodb.put_item(
+            TableName=TABLE_NAME,
+            Item={
+                "EmployeeID": {
+                    "S": employee_id
+                },
+                "Name": {
+                    "S": name
+                }
+            }
+        )
 
-       }
-   elif method == "GET":
+        return response(
+            200,
+            {
+                "EmployeeID": employee_id,
+                "Name": name,
+                "message": "Employee created successfully"
+            }
+        )
 
-     employee_id = event["pathParameters"]["EmployeeID"]
-     response = table.get_item(
-                 Key = {
+    # -----------------------------
+    # GET EMPLOYEE (GET)
+    # -----------------------------
+    elif method == "GET":
 
-                          "EmployeeID": employee_id
-                     }
+        employee_id = event["pathParameters"]["EmployeeID"]
 
-             )
+        result = dynamodb.get_item(
+            TableName=TABLE_NAME,
+            Key={
+                "EmployeeID": {
+                    "S": employee_id
+                }
+            }
+        )
 
-     return {
-                "statusCode": 200,
-                "body": json.dumps(response.get("Item", {}))
+        if "Item" not in result:
+            return response(
+                404,
+                {
+                    "message": "Employee not found"
+                }
+            )
 
-             }
+        item = result["Item"]
 
+        return response(
+            200,
+            {
+                "EmployeeID": item["EmployeeID"]["S"],
+                "Name": item["Name"]["S"]
+            }
+        )
 
+    # -----------------------------
+    # UPDATE EMPLOYEE (PUT)
+    # -----------------------------
+    elif method == "PUT":
 
+        employee_id = event["pathParameters"]["EmployeeID"]
 
+        body = json.loads(event["body"])
 
-#    return {
-#            "statusCode":200,
-#            "body": "Hello Soumyendra,LETSGO!!!!!!!! I updated the code from Terraform!"
-#            }
+        name = body["Name"]
 
+        dynamodb.update_item(
+            TableName=TABLE_NAME,
+            Key={
+                "EmployeeID": {
+                    "S": employee_id
+                }
+            },
+            UpdateExpression="SET #n = :name",
+            ExpressionAttributeNames={
+                "#n": "Name"
+            },
+            ExpressionAttributeValues={
+                ":name": {
+                    "S": name
+                }
+            }
+        )
+
+        return response(
+            200,
+            {
+                "EmployeeID": employee_id,
+                "Name": name,
+                "message": "Employee updated successfully"
+            }
+        )
+
+    # -----------------------------
+    # DELETE EMPLOYEE (DELETE)
+    # -----------------------------
+    elif method == "DELETE":
+
+        employee_id = event["pathParameters"]["EmployeeID"]
+
+        dynamodb.delete_item(
+            TableName=TABLE_NAME,
+            Key={
+                "EmployeeID": {
+                    "S": employee_id
+                }
+            }
+        )
+
+        return response(
+            200,
+            {
+                "EmployeeID": employee_id,
+                "message": "Employee deleted successfully"
+            }
+        )
+
+    # -----------------------------
+    # UNSUPPORTED METHOD
+    # -----------------------------
+    else:
+
+        return response(
+            400,
+            {
+                "message": f"Unsupported method {method}"
+            }
+        )

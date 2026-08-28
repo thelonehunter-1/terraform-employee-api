@@ -60,3 +60,15 @@ resource "aws_apigatewayv2_route" "employee_get_route" {
   target = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "employee_put_route" {
+  api_id    = aws_apigatewayv2_api.demo_api.id
+  route_key = "PUT /employee/{EmployeeID}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "employee_delete_route" {
+  api_id    = aws_apigatewayv2_api.demo_api.id
+  route_key = "DELETE /employee/{EmployeeID}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+}
+
