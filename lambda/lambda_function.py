@@ -6,6 +6,7 @@ dynamodb = boto3.client("dynamodb")
 TABLE_NAME = "EmployeeTerraformDemo"
 
 
+
 def response(status_code, body):
     return {
         "statusCode": status_code,
@@ -16,6 +17,7 @@ def response(status_code, body):
     }
 
 def lambda_handler(event, context):
+    raise Exception("Testing CloudWatch Alarm")
     method = event["requestContext"]["http"]["method"]
 
     # -----------------------------
