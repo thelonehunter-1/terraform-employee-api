@@ -16,8 +16,6 @@ def response(status_code, body):
     }
 
 def lambda_handler(event, context):
-    print("EVENT:")
-    print(json.dumps(event))
     method = event["requestContext"]["http"]["method"]
 
     # -----------------------------
