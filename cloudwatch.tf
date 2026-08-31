@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_alarm" {
     ApiId = aws_apigatewayv2_api.demo_api.id
 
   }
-  alarms_actions = [aws_sns_topic.notifications.arn]
+  alarm_actions = [aws_sns_topic.notifications.arn]
 
 }
 
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_dashboard" "employee_dashboard" {
   dashboard_body = jsonencode({
     widgets = [
       {
-        type   = metric
+        type   = "metric"
         x      = 0
         y      = 0
         width  = 12
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_dashboard" "employee_dashboard" {
         }
       },
       {
-        type   = metric
+        type   = "metric"
         x      = 0
         y      = 0
         width  = 12
