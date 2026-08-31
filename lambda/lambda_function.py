@@ -17,7 +17,7 @@ def response(status_code, body):
     }
 
 def lambda_handler(event, context):
-    raise Exception("Testing CloudWatch Alarm #2")
+    raise Exception("Testing CloudWatch Alarm")
     method = event["requestContext"]["http"]["method"]
 
     # -----------------------------
