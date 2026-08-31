@@ -1,9 +1,10 @@
 import json
 import boto3
+import os
 
 dynamodb = boto3.client("dynamodb")
 
-TABLE_NAME = "EmployeeTerraformDemo"
+TABLE_NAME = os.environ["TABLE_NAME"]
 
 
 
@@ -18,7 +19,11 @@ def response(status_code, body):
 
 def lambda_handler(event, context):
     method = event["requestContext"]["http"]["method"]
-
+    environment {
+            variables = {
+                TABLE_NAME = aws_dynamodb_table.employee.name
+                }
+            }
     # -----------------------------
     # CREATE EMPLOYEE (POST)
     # -----------------------------
