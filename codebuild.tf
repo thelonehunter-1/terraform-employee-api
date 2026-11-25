@@ -24,7 +24,7 @@ resource "aws_codebuild_project" "terraform_deploy" {
   name           = "terraform-employee-api-build"
   description    = "Runs Terraform init/plan/apply for Employee API"
   service_role   = aws_iam_role.codebuild_role.arn
-  source_version = "branch1"
+  source_version = "main"
 
   artifacts {
     type = "NO_ARTIFACTS"

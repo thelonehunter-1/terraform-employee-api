@@ -90,7 +90,7 @@ resource "aws_codepipeline" "terraform_pipeline" {
       configuration = {
         ConnectionArn    = aws_codestarconnections_connection.github.arn
         FullRepositoryId = "thelonehunter-1/terraform-employee-api"
-        BranchName       = "branch1"
+        BranchName       = "main"
         DetectChanges    = "true"
       }
     }
