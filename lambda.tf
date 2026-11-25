@@ -53,6 +53,12 @@ resource "aws_lambda_function" "demo" {
 
   runtime = "python3.13"
 
+  environment {
+    variables = {
+      TABLE_NAME = aws_dynamodb_table.employee.name
+    }
+  }
+
 }
 
 resource "aws_iam_role_policy" "lambda_dynamodb" {

@@ -60,7 +60,7 @@ resource "aws_cloudwatch_dashboard" "employee_dashboard" {
 
           period = 300
           stat   = "Sum"
-          region = "ap-south-1"
+          region = "ap-southeast-2"
           title  = "Lambda Invocations"
         }
       },
@@ -83,7 +83,7 @@ resource "aws_cloudwatch_dashboard" "employee_dashboard" {
 
           period = 300
           stat   = "Sum"
-          region = "ap-south-1"
+          region = "ap-southeast-2"
           title  = "Lambda Errors"
         }
       }

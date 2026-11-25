@@ -2,9 +2,9 @@ terraform {
 
   backend "s3" {
 
-    bucket         = "soumyendra-terraform-state-620969610190"
+    bucket         = "default-terraform-state-803817393192"
     key            = "employee-api/terraform.tfstate"
-    region         = "ap-south-1"
+    region         = "ap-southeast-2"
     dynamodb_table = "terraform-state-lock"
     encrypt        = true
 
