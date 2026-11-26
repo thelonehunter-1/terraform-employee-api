@@ -46,8 +46,14 @@ resource "aws_cloudwatch_event_target" "pipeline_sns" {
       time        = "$.time"
     }
 
-    input_template = <<-EOF
-      "CodePipeline Execution Update\n\nPipeline: <pipeline>\nStatus: <state>\nExecution ID: <executionId>\nRegion: <region>\nTime (UTC): <time>\nConsole: https://<region>.console.aws.amazon.com/codesuite/codepipeline/pipelines/<pipeline>/executions/<executionId>/timeline"
-    EOF
+    input_template = jsonencode({
+      alert        = "CodePipeline Execution Update"
+      pipeline     = "<pipeline>"
+      status       = "<state>"
+      execution_id = "<executionId>"
+      region       = "<region>"
+      time_utc     = "<time>"
+      console_url  = "https://<region>.console.aws.amazon.com/codesuite/codepipeline/pipelines/<pipeline>/executions/<executionId>/timeline"
+    })
   }
 }
