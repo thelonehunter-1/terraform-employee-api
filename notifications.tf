@@ -66,7 +66,7 @@ resource "aws_cloudwatch_event_target" "pipeline_sns" {
     "https://<region>.console.aws.amazon.com/codesuite/codepipeline/pipelines/<pipeline>/executions/<executionId>/timeline"
     ""
     "============================================"
-    "This is an automated AWS notification."
+    "This is an automated AWS notification"
     "============================================"
     EOT
   }
