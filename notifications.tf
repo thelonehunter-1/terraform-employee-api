@@ -1,3 +1,4 @@
+
 data "aws_iam_policy_document" "sns_topic_policy" {
   statement {
     sid     = "AllowEventBridgeAndCloudWatchPublish"
@@ -20,11 +21,12 @@ resource "aws_sns_topic_policy" "notifications_policy" {
 
 resource "aws_cloudwatch_event_rule" "pipeline_state_change" {
   name        = "terraform-employee-api-pipeline-state"
-  description = "Send readable SNS alerts when CodePipeline succeeds or fails"
+  description = "Send formatted SNS alerts when CodePipeline succeeds or fails"
 
   event_pattern = jsonencode({
     source      = ["aws.codepipeline"]
     detail-type = ["CodePipeline Pipeline Execution State Change"]
+
     detail = {
       pipeline = [aws_codepipeline.terraform_pipeline.name]
       state    = ["SUCCEEDED", "FAILED"]
@@ -46,6 +48,27 @@ resource "aws_cloudwatch_event_target" "pipeline_sns" {
       time        = "$.time"
     }
 
-    input_template = "\"CodePipeline Execution Update\\n\\nPipeline: <pipeline>\\nStatus: <state>\\nExecution ID: <executionId>\\nRegion: <region>\\nTime (UTC): <time>\\nConsole: https://<region>.console.aws.amazon.com/codesuite/codepipeline/pipelines/<pipeline>/executions/<executionId>/timeline\""
+    input_template = <<-EOT
+    "============================================"
+    "          AWS CODEPIPELINE ALERT"
+    "============================================"
+    ""
+    "Pipeline Name : <pipeline>"
+    "Status        : <state>"
+    "Execution ID  : <executionId>"
+    "AWS Region    : <region>"
+    "Time (UTC)    : <time>"
+    ""
+    "--------------------------------------------"
+    "EXECUTION DETAILS"
+    "--------------------------------------------"
+    "Pipeline Console:"
+    "https://<region>.console.aws.amazon.com/codesuite/codepipeline/pipelines/<pipeline>/executions/<executionId>/timeline"
+    ""
+    "============================================"
+    "This is an automated AWS notification."
+    "============================================"
+    EOT
   }
 }
+
